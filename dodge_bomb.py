@@ -67,6 +67,10 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
 
 
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    """
+    移動量タプルをキー
+    rotozoomしたこうかとん画像Surfaceを値とする辞書を返す
+    """
     kk_img0 = pg.image.load("fig/3.png")
     kk_img1 = pg.transform.flip(kk_img0, True, False)
     kk_imgs = {
