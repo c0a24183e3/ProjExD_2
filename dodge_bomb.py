@@ -66,6 +66,23 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     return bb_imgs, bb_accs
 
 
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    kk_img0 = pg.image.load("fig/3.png")
+    kk_img1 = pg.transform.flip(kk_img0, True, False)
+    kk_imgs = {
+        (0, 0):kk_img0,
+        (0, -5):pg.transform.rotozoom(kk_img1, 90, 0.9),
+        (0, +5):pg.transform.rotozoom(kk_img0, 90, 0.9),
+        (-5, 0):kk_img0,
+        (+5, 0):kk_img1,
+        (+5, -5):pg.transform.rotozoom(kk_img1, 45, 0.9),
+        (-5, -5):pg.transform.rotozoom(kk_img0, -45, 0.9),
+        (-5, +5):pg.transform.rotozoom(kk_img0, 45, 0.9),
+        (+5, +5):pg.transform.rotozoom(kk_img1, -45, 0.9),
+    }
+    return kk_imgs
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -73,7 +90,8 @@ def main():
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
-    bb_img = pg.Surface((20,20))
+    kk_imgs = get_kk_imgs()
+    bb_img = pg.Surface((20,20))    
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
     bb_img.set_colorkey((0, 0, 0))
     bb_imgs, bb_accs = init_bb_imgs()
@@ -107,6 +125,7 @@ def main():
         # if key_lst[pg.K_RIGHT]:
         #     sum_mv[0] += 5
         kk_rct.move_ip(sum_mv)
+        kk_img = kk_imgs.get(tuple(sum_mv), kk_imgs[(0, 0)])
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
